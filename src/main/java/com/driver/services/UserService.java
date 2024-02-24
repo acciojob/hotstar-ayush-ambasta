@@ -36,7 +36,9 @@ public class UserService {
         //Hint: Take out all the Webseries from the WebRepository
 
         Optional<User>optionalUser = userRepository.findById(userId);
-
+        if(optionalUser.isEmpty()){
+            return 0;
+        }
         int age = optionalUser.get().getAge();
         SubscriptionType subscriptionType = optionalUser.get().getSubscription().getSubscriptionType();
         int rank;

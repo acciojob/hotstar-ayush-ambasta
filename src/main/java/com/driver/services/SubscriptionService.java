@@ -31,7 +31,7 @@ public class SubscriptionService {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if(optionalUser.isEmpty()){
-            return null;
+            return 0;
         }
         int noOfScreensRequired = subscriptionEntryDto.getNoOfScreensRequired();
         SubscriptionType subscriptionType = subscriptionEntryDto.getSubscriptionType();
