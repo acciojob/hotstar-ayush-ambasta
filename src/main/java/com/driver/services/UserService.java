@@ -39,8 +39,36 @@ public class UserService {
 
         int age = optionalUser.get().getAge();
         SubscriptionType subscriptionType = optionalUser.get().getSubscription().getSubscriptionType();
+        int rank;
 
-        return webSeriesRepository.getCount(age,subscriptionType);
+        if(subscriptionType==SubscriptionType.ELITE){
+            rank=1;
+        }else if(subscriptionType==SubscriptionType.PRO){
+            rank=2;
+        }else{
+            rank=3;
+        }
+        List<WebSeries> webSeriesList = webSeriesRepository.findAll();
+
+        int count = 0;
+        for(WebSeries webSeries:webSeriesList){
+            int ageLimit = webSeries.getAgeLimit();
+            SubscriptionType type = webSeries.getSubscriptionType();
+            int reqRank;
+
+            if(type==SubscriptionType.ELITE){
+                reqRank=1;
+            }else if(type==SubscriptionType.PRO){
+                reqRank=2;
+            }else{
+                reqRank=3;
+            }
+
+            if(ageLimit<=age && rank<=reqRank){
+                count++;
+            }
+        }
+        return count;
     }
 
 

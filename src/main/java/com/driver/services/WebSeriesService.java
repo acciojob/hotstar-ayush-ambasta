@@ -41,13 +41,17 @@ public class WebSeriesService {
         }else{
             Optional<ProductionHouse> optionalProductionHouse = productionHouseRepository.findById(productionHouseId);
             ProductionHouse productionHouse = optionalProductionHouse.get();
-            List<WebSeries> webSeriesList = webSeriesRepository.findAll();
+            List<WebSeries> webSeriesList = productionHouse.getWebSeriesList();
             int count = webSeriesList.size();
             double oldRating = productionHouse.getRatings();
             double newRating = (double)(count*oldRating + rating)/(count+1);
 
-            productionHouse.setRatings(newRating);
+
             WebSeries newWebseries = new WebSeries(seriesName,ageLimit,rating,subscriptionType);
+            webSeriesList.add(newWebseries);
+            productionHouse.setWebSeriesList(webSeriesList);
+            productionHouse.setRatings(newRating);
+
             productionHouseRepository.save(productionHouse);
             WebSeries saveWebSeries = webSeriesRepository.save(newWebseries);
             return saveWebSeries.getId();
