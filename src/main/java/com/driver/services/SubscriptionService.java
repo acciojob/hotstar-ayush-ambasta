@@ -29,10 +29,10 @@ public class SubscriptionService {
 
         int userId = subscriptionEntryDto.getUserId();
         Optional<User> optionalUser = userRepository.findById(userId);
-
         if(optionalUser.isEmpty()){
             return 0;
         }
+        User user = optionalUser.get();
         int noOfScreensRequired = subscriptionEntryDto.getNoOfScreensRequired();
         SubscriptionType subscriptionType = subscriptionEntryDto.getSubscriptionType();
 
@@ -52,7 +52,9 @@ public class SubscriptionService {
 
 
 
-        subscriptionRepository.save(savedSubscription);
+//        subscriptionRepository.save(savedSubscription);
+        user.setSubscription(savedSubscription);
+        savedSubscription.setUser(user);
         userRepository.save(optionalUser.get());
         return totalAmountPaid;
     }
@@ -65,9 +67,11 @@ public class SubscriptionService {
 
 
         Optional<User> optionalUser = userRepository.findById(userId);
+
         if(optionalUser.isEmpty()){
-            return null;
+            return 0;
         }
+        User user = optionalUser.get();
         Subscription subscription = optionalUser.get().getSubscription();
 
         int noOfScreensSubscribed = subscription.getNoOfScreensSubscribed();
@@ -90,7 +94,7 @@ public class SubscriptionService {
         difference = AmountToPay-totalAmountPaid;
         subscription.setTotalAmountPaid(AmountToPay);
 
-        subscriptionRepository.save(subscription);
+        user.setSubscription(subscription);
         userRepository.save(optionalUser.get());
 
         return difference;
