@@ -28,6 +28,11 @@ public class SubscriptionService {
         //Save The subscription Object into the Db and return the total Amount that user has to pay
 
         int userId = subscriptionEntryDto.getUserId();
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if(optionalUser.isEmpty()){
+            return null;
+        }
         int noOfScreensRequired = subscriptionEntryDto.getNoOfScreensRequired();
         SubscriptionType subscriptionType = subscriptionEntryDto.getSubscriptionType();
 
@@ -45,7 +50,7 @@ public class SubscriptionService {
 
         Subscription savedSubscription = new Subscription(subscriptionType,noOfScreensRequired,startSubscriptionDate,totalAmountPaid);
 
-        Optional<User> optionalUser = userRepository.findById(userId);
+
 
         subscriptionRepository.save(savedSubscription);
         userRepository.save(optionalUser.get());
@@ -61,7 +66,7 @@ public class SubscriptionService {
 
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isEmpty()){
-            throw new Exception("Invalid user id");
+            return null;
         }
         Subscription subscription = optionalUser.get().getSubscription();
 
